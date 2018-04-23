@@ -1,0 +1,18 @@
+database:
+  node: dc1
+  nodes:
+    dc1:
+      status: 0
+      master: 
+      slave:
+    dc2:
+      status: 1
+      master: 
+      slave:
+app:
+  env: production
+  listen: 3987
+redis:
+  host:
+  pass:
+
