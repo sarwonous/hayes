@@ -28,8 +28,11 @@ func (m *App) handler() {
 	// brand
 	m.router.HandleFunc("/brand/{id:[0-9]+}/{name:[a-z0-9]+}", reader.BrandHandler)
 	// home
-	m.router.HandleFunc("/{path}", reader.CustomHandler)
+	m.router.HandleFunc("/", reader.HomeHandler)
 	// custom url
+	m.router.PathPrefix("/assets/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./html/"))))
+	m.router.PathPrefix("/{name}.js").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./html/"))))
+	m.router.PathPrefix("/{name}.css").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./html/"))))
 	m.router.PathPrefix("/").HandlerFunc(reader.CustomHandler)
 }
 
