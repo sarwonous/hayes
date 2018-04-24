@@ -15,7 +15,7 @@ app:
 
 redis:
   master:
-    address: localhost:6379
+    address: redisserver:6379
     password: ''
     db: 0
   slave:
