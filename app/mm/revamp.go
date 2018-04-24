@@ -53,7 +53,7 @@ func (m *App) RevampInit() {
 	m.router = mux.NewRouter()
 	m.handler()
 	srv := &http.Server{
-		Addr: "0.0.0.0:8080",
+		Addr: fmt.Sprintf("0.0.0.0:%s", viper.GetString("app.listen")),
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,

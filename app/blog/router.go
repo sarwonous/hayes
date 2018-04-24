@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/unicolony/hayes/app/blog/reader"
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
+	"github.com/unicolony/hayes/app/blog/reader"
 )
 
 // App App
@@ -38,10 +38,18 @@ func (m *App) Name() string {
 }
 
 func (m *App) Command() *cobra.Command {
-	cmd := oist===oist==
+	cmd := &cobra.Command{
+		Use:   "blog",
+		Short: "blog",
+		Long:  "blog",
+		Run: func(c *cobra.Command, args []string) {
+			m.Init()
+		},
+	}
+	return cmd
 }
 
 // NewApp App
-func NewApp() {
+func NewApp() *App {
 	return &App{}
 }
