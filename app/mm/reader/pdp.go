@@ -1,12 +1,15 @@
 package reader
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
+
+	"github.com/unicolony/hayes/service/meta"
 )
 
 // PDPHandler page
 func PDPHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Handle PDP")
-	w.Write([]byte("PDP"))
+	homeMeta := meta.GetMetaByURL("https://www.mataharimall.com")
+	tmpl := template.Must(template.ParseFiles("html/index.html"))
+	tmpl.Execute(w, homeMeta)
 }

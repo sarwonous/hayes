@@ -1,12 +1,18 @@
 package reader
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
+	"github.com/unicolony/hayes/service/meta"
 )
 
 // PCPHandler handler
 func PCPHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("handler pcp request")
-	w.Write([]byte("PCP"))
+	vars := mux.Vars(r)
+	categoryMeta := meta.GetMetaCategory(cast.ToInt(vars["id"]))
+	tmpl := template.Must(template.ParseFiles("html/index.html"))
+	tmpl.Execute(w, categoryMeta)
 }

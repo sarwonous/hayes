@@ -1,12 +1,15 @@
 package reader
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
+
+	"github.com/unicolony/hayes/service/meta"
 )
 
 // HomeHandler handler
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("handler Home request")
-	w.Write([]byte("Home"))
+	homeMeta := meta.GetMetaByURL("https://www.mataharimall.com")
+	tmpl := template.Must(template.ParseFiles("html/index.html"))
+	tmpl.Execute(w, homeMeta)
 }

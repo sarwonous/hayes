@@ -42,7 +42,7 @@ func (m *App) handler() {
 	m.router.PathPrefix("/{name}.js").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
 	m.router.PathPrefix("/{name}.css").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
 	m.router.PathPrefix("/robots.txt").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
-	m.router.PathPrefix("/").HandlerFunc(reader.CustomHandler).Methods("GET")
+	m.router.PathPrefix("/{name}").HandlerFunc(reader.CustomHandler).Methods("GET")
 }
 
 // RevampInit RevampInit init
