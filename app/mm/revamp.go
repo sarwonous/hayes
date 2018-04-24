@@ -4,15 +4,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	"./reader"
+	"github.com/spf13/viper"
+
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
+	"github.com/unicolony/hayes/app/mm/reader"
 )
 
 // App MMApp
@@ -20,20 +23,26 @@ type App struct {
 	router *mux.Router
 }
 
+var (
+	Templates map[string]*template.Template
+)
+
 func (m *App) handler() {
+	source := viper.GetString("source")
 	// pdp
-	m.router.HandleFunc("/{name:[a-z0-9]+}-{id:[0-9]+}.html", reader.PDPHandler)
+	m.router.HandleFunc("/{name:[a-z0-9]+}-{id:[0-9]+}.html", reader.PDPHandler).Methods("GET")
 	// pcp
-	m.router.HandleFunc("/p-{id:[0-9]+}/{name:[a-z0-9]+}", reader.PCPHandler)
+	m.router.HandleFunc("/p-{id:[0-9]+}/{name:[a-z0-9]+}", reader.PCPHandler).Methods("GET")
 	// brand
-	m.router.HandleFunc("/brand/{id:[0-9]+}/{name:[a-z0-9]+}", reader.BrandHandler)
+	m.router.HandleFunc("/brand/{id:[0-9]+}/{name:[a-z0-9]+}", reader.BrandHandler).Methods("GET")
 	// home
-	m.router.HandleFunc("/", reader.HomeHandler)
+	m.router.HandleFunc("/", reader.HomeHandler).Methods("GET")
 	// custom url
-	m.router.PathPrefix("/assets/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./html/"))))
-	m.router.PathPrefix("/{name}.js").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./html/"))))
-	m.router.PathPrefix("/{name}.css").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./html/"))))
-	m.router.PathPrefix("/").HandlerFunc(reader.CustomHandler)
+	m.router.PathPrefix("/assets/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
+	m.router.PathPrefix("/{name}.js").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
+	m.router.PathPrefix("/{name}.css").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
+	m.router.PathPrefix("/robots.txt").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
+	m.router.PathPrefix("/").HandlerFunc(reader.CustomHandler).Methods("GET")
 }
 
 // RevampInit RevampInit init

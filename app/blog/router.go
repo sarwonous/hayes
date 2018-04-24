@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"./reader"
+	"github.com/unicolony/hayes/app/blog/reader"
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
 )

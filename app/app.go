@@ -1,8 +1,8 @@
 package app
 
 import (
-	"./mm"
 	"github.com/spf13/cobra"
+	"github.com/unicolony/hayes/app/mm"
 )
 
 // App App

@@ -1,8 +1,8 @@
-package source
+package db
 
 import (
 	"database/sql"
-
+	// using mysql driver
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
@@ -21,7 +21,7 @@ type database struct {
 var connectedDB = make(map[string]*database, 0)
 var activeNode string
 
-func dbInit() {
+func Init() {
 	config := viper.GetStringMap("database")
 	nodes := config["nodes"].(map[string]interface{})
 	for key, node := range nodes {

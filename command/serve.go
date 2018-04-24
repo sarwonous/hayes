@@ -3,8 +3,8 @@ package command
 import (
 	"fmt"
 
-	"../app"
 	"github.com/spf13/cobra"
+	"github.com/unicolony/hayes/app"
 )
 
 // ServeCommand frontend serve

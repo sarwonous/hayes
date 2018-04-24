@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"./command"
-	"./source"
 	"github.com/spf13/cobra"
+	"github.com/unicolony/hayes/command"
+	"github.com/unicolony/hayes/source"
 )
 
 func main() {

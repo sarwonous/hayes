@@ -1,7 +1,7 @@
 package service
 
 import (
-	"../app/blog"
+	"github.com/unicolony/hayes/app/blog"
 )
 
 // Search Post
