@@ -10,6 +10,6 @@ import (
 // NotFoundHandler handler
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	meta := meta.GetMetaByURL("/not-found")
-	tmpl := template.Must(template.ParseFiles("html/index.html"))
+	tmpl := template.Must(template.ParseFiles(TemplateFile))
 	tmpl.Execute(w, meta)
 }

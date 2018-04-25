@@ -16,19 +16,8 @@ type App struct {
 // Init App
 func (m *App) Init() {
 	app := mux.NewRouter()
-
 	app.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("public"))))
-
-	// app.HandleFunc("/", cont.MHome)
-
-	// app.HandleFunc("/{cat1:[a-z0-9-]+}/{cat2:[a-z0-9-]+}/{cat3:[a-z0-9-]+}/{id:[a-z0-9-]+}.html", cont.MRead)
-	// app.HandleFunc("/{cat1:[a-z0-9-]+}/{cat2:[a-z0-9-]+}/{id:[a-z0-9-]+}.html", cont.MRead)
-	// app.HandleFunc("/{cat1:[a-z0-9-]+}/{id:[a-z0-9-]+}.html", cont.MRead)
-	// app.HandleFunc("/tags/{tags:[a-z0-9]+}", cont.MTags)
-	// app.HandleFunc("/{category:[a-z0-9]+}", cont.MCategories)
 	app.HandleFunc("/{id:[a-z0-9-]+}.html", reader.Single)
-	// app.Start(config.GetString("host"))
-	// http.Handle("/", app)/
 	log.Fatal(http.ListenAndServe(":8000", app))
 }
 
@@ -37,6 +26,7 @@ func (m *App) Name() string {
 	return "blog"
 }
 
+// Command app
 func (m *App) Command() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "blog",

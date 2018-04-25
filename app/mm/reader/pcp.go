@@ -13,6 +13,6 @@ import (
 func PCPHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	categoryMeta := meta.GetMetaCategory(cast.ToInt(vars["id"]))
-	tmpl := template.Must(template.ParseFiles("html/index.html"))
+	tmpl := template.Must(template.ParseFiles(TemplateFile))
 	tmpl.Execute(w, categoryMeta)
 }

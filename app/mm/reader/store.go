@@ -13,6 +13,6 @@ import (
 func StoreHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	brandMeta := meta.GetMetaByURL(fmt.Sprintf("/store/%s/%s", vars["id"], vars["name"]))
-	tmpl := template.Must(template.ParseFiles("html/index.html"))
+	tmpl := template.Must(template.ParseFiles(TemplateFile))
 	tmpl.Execute(w, brandMeta)
 }

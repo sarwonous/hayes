@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
 	"github.com/unicolony/hayes/app/mm/reader"
+	"github.com/unicolony/hayes/source/log"
 )
 
 // App MMApp
@@ -68,29 +68,7 @@ var (
 )
 
 func (m *App) handler() {
-	source := viper.GetString("source")
-	m.router.StrictSlash(true)
-	// pdp
-	m.router.HandleFunc("/{name:[a-z0-9]+}-{id:[0-9]+}.html", reader.PDPHandler).Methods("GET")
-	// pcp
-	m.router.HandleFunc("/p-{id:[0-9]+}/{name:[a-z0-9]+}", reader.PCPHandler).Methods("GET")
-	// brand
-	m.router.HandleFunc("/brand/{id:[0-9]+}/{name:[a-z0-9]+}", reader.BrandHandler).Methods("GET")
-	// store
-	m.router.HandleFunc("/store/{id:[0-9]+}/{name:[a-z0-9]+}", reader.StoreHandler).Methods("GET")
-	// campaign
-	m.router.HandleFunc("/mau-gaya-itu-gampang/{campaign_name}-{campaign_id}/{post_id}/{icode}", reader.CampaignHandler).Methods("GET")
-	// home
-	m.router.HandleFunc("/", reader.HomeHandler).Methods("GET")
-	// custom url
-	for _, name := range customRoutes {
-		m.router.HandleFunc(name, reader.CustomHandler).Methods("GET")
-	}
-	m.router.PathPrefix("/assets/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
-	m.router.PathPrefix("/{name}.js").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
-	m.router.PathPrefix("/{name}.css").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
-	m.router.PathPrefix("/robots.txt").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
-	m.router.NotFoundHandler = http.HandlerFunc(reader.NotFoundHandler)
+	reader.SetupRouter(m.router, customRoutes)
 }
 
 // RevampInit RevampInit init
@@ -110,7 +88,7 @@ func (m *App) RevampInit() {
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
-			log.Println(err)
+			log.New().Error("app inited")
 		}
 	}()
 
@@ -120,13 +98,13 @@ func (m *App) RevampInit() {
 	ctx, cancel := context.WithTimeout(context.Background(), wait)
 	defer cancel()
 	srv.Shutdown(ctx)
-	log.Println("Shutting down")
+	log.New().Info("app shutdown")
 	os.Exit(0)
 }
 
 // Init Init
 func (m *App) Init() {
-	fmt.Println("App inited")
+	log.New().Info("app inited")
 	m.RevampInit()
 }
 
