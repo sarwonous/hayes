@@ -11,9 +11,10 @@ import (
 func main() {
 	source.Init()
 	cmd := &cobra.Command{
-		Use: "blog",
+		Use: "./app",
 	}
 	cmd.AddCommand(command.ServeCommand())
+	cmd.AddCommand(command.RunCommand())
 	err := cmd.Execute()
 	if err != nil {
 		fmt.Println(err.Error())

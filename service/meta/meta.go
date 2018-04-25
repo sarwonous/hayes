@@ -38,21 +38,21 @@ type Category struct {
 
 // GetMetaCategory get
 func GetMetaCategory(id int) *Meta {
-	var meta = NewMeta()
+	var meta = &Meta{}
 	db, err := redis.Connect("master")
 	if err != nil {
-		return meta
+		return NewMeta(meta, "")
 	}
 
 	var cat = &Category{}
 
 	res, err := db.HGet("categories", cast.ToString(id)).Result()
 	if err != nil {
-		return meta
+		return NewMeta(meta, "")
 	}
 	err = json.Unmarshal([]byte(res), cat)
 	if err != nil {
-		return meta
+		return NewMeta(meta, "")
 	}
 	meta.Title = cat.MetaTitle
 	meta.Canonical = cat.Canonical
@@ -60,38 +60,57 @@ func GetMetaCategory(id int) *Meta {
 	meta.Description = cat.MetaDescription
 	meta.Keyword = cat.MetaKeyword
 	meta.Alternate = cat.Canonical
-	return meta
+	return NewMeta(meta, "")
 }
 
 // GetMetaByURL page
 func GetMetaByURL(url string) *Meta {
-	var meta = NewMeta()
+	var meta = &Meta{}
 	db, err := redis.Connect("master")
 	if err != nil {
-		return meta
+		return NewMeta(meta, url)
 	}
 	res, err := db.HGet("metatags:url", url).Result()
 	if err != nil {
-		return meta
+		return NewMeta(meta, url)
 	}
+
 	err = json.Unmarshal([]byte(res), meta)
 	if err != nil {
-		return meta
+		return NewMeta(meta, url)
 	}
-	meta.Alternate = meta.Canonical
-	return meta
+	return NewMeta(meta, url)
 }
 
 // NewMeta NewMeta
-func NewMeta() *Meta {
+func NewMeta(m *Meta, url string) *Meta {
 	seo := viper.GetStringMapString("seo")
-	return &Meta{
-		Title:     "Home",
-		Canonical: seo["canonical"],
-		Image:     seo["image"],
-		FBAppID:   seo["fb_app_id"],
-		FBAdmin:   seo["fb_admin"],
-		Site:      seo["site"],
-		Creator:   seo["creator"],
+	if m.Canonical == "" {
+		m.Canonical = seo["canonical"]
 	}
+	if m.Title == "" {
+		m.Title = seo["title"]
+	}
+	if m.Image == "" {
+		m.Image = seo["image"]
+	}
+	if m.FBAppID == "" {
+		m.FBAppID = seo["fb_app_id"]
+	}
+	if m.FBAdmin == "" {
+		m.FBAdmin = seo["fb_admin"]
+	}
+	if m.Site == "" {
+		m.Site = seo["site"]
+	}
+	if m.Creator == "" {
+		m.Site = seo["creator"]
+	}
+	if m.Alternate == "" {
+		m.Alternate = m.Canonical
+	}
+	if m.Robots == "" {
+		m.Robots = seo["robots"]
+	}
+	return m
 }

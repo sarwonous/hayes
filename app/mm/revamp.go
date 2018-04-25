@@ -24,25 +24,73 @@ type App struct {
 }
 
 var (
-	Templates map[string]*template.Template
+	Templates    map[string]*template.Template
+	customRoutes = []string{
+		"/",
+		"/mau-gaya-itu-gampang",
+		"/mau-gaya-itu-gampang/{campaign_name}-{campaign_id}/{post_id}/{icode}",
+		"/search",
+		"/products",
+		"/searchnotfound",
+		"/sub-category/",
+		"/category/",
+		"/subcategory/{categoryId}",
+		"/brands",
+		"/catalogcategory",
+		"/product/comments/{id}",
+		"/product/reviews/{id}",
+		"/product/guide",
+		"/login",
+		"/logout",
+		"/register",
+		"/registered",
+		"/forgot-password",
+		"/user/newpassword",
+		"/promo",
+		"/promo/{type}",
+		"/profile",
+		"/profile-edit",
+		"/lovelist",
+		"/cart",
+		"/cart/empty",
+		"/profile/my-order",
+		"/profile/my-order/add-review",
+		"/profile/my-order/{so_number}",
+		"/track/{provider}/{so_number}",
+		"/profile/my-order-confirm/{so_number}",
+		"/profile/credit-card",
+		"/address",
+		"/address/add",
+		"/address/edit/{id}",
+		"/bantuan",
+		"/bantuan/{detail}",
+	}
 )
 
 func (m *App) handler() {
 	source := viper.GetString("source")
+	m.router.StrictSlash(true)
 	// pdp
 	m.router.HandleFunc("/{name:[a-z0-9]+}-{id:[0-9]+}.html", reader.PDPHandler).Methods("GET")
 	// pcp
 	m.router.HandleFunc("/p-{id:[0-9]+}/{name:[a-z0-9]+}", reader.PCPHandler).Methods("GET")
 	// brand
 	m.router.HandleFunc("/brand/{id:[0-9]+}/{name:[a-z0-9]+}", reader.BrandHandler).Methods("GET")
+	// store
+	m.router.HandleFunc("/store/{id:[0-9]+}/{name:[a-z0-9]+}", reader.StoreHandler).Methods("GET")
+	// campaign
+	m.router.HandleFunc("/mau-gaya-itu-gampang/{campaign_name}-{campaign_id}/{post_id}/{icode}", reader.CampaignHandler).Methods("GET")
 	// home
 	m.router.HandleFunc("/", reader.HomeHandler).Methods("GET")
 	// custom url
+	for _, name := range customRoutes {
+		m.router.HandleFunc(name, reader.CustomHandler).Methods("GET")
+	}
 	m.router.PathPrefix("/assets/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
 	m.router.PathPrefix("/{name}.js").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
 	m.router.PathPrefix("/{name}.css").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
 	m.router.PathPrefix("/robots.txt").Handler(http.StripPrefix("/", http.FileServer(http.Dir(source))))
-	m.router.PathPrefix("/{name}").HandlerFunc(reader.CustomHandler).Methods("GET")
+	m.router.NotFoundHandler = http.HandlerFunc(reader.NotFoundHandler)
 }
 
 // RevampInit RevampInit init

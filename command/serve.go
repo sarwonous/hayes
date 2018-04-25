@@ -1,8 +1,6 @@
 package command
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/unicolony/hayes/app"
 )
@@ -15,7 +13,7 @@ func ServeCommand() *cobra.Command {
 		Short: "serve an app",
 		Long:  "serve an app",
 		Run: func(c *cobra.Command, args []string) {
-			fmt.Println("serve")
+			c.Help()
 		},
 	}
 	app.InsertCommand(cmd)
