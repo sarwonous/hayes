@@ -1,3 +1,25 @@
+app:
+  env: production
+  listen: 3987
+  
+redis:
+  master:
+    address: redisserver:6379
+    password: ''
+    db: 0
+  slave:
+source: ./html
+
+seo:
+  title: Home
+  canonical: http://www.mataharimall.com
+  site: "@MatahariMall.com"
+  creator: "@MatahariMall"
+  fb_app_id: 109283902183
+  fb_admin: 109283902183
+  image: http://www.mataharimall.com/assets/images/app-icon.png
+  favicon: https:/www.mataharimall.com/assets/images/app-icon.png
+
 database:
   node: dc1
   nodes:
@@ -9,31 +31,3 @@ database:
       status: 1
       master: 
       slave:
-app:
-  env: production
-  listen: 3987
-
-redis:
-  master:
-    address: redisserver:6379
-    password: ''
-    db: 0
-  slave:
-    fallback_to: master
-  cache:
-    address: localhost:6379
-    password: ''
-    db: 10  
-      
-  slave:
-source: ./html
-
-seo:
-  title: Home
-  canonical: http://www.mataharimall.com
-  site: "@MatahariMall.com"
-  creator: "@MatahariMall"
-  fb_app_id: 109283902183
-  fb_admin: 109283902183
-  image: http:/127.0.0.1:8080/assets/images/app-icon.png
-
